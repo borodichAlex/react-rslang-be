@@ -21,6 +21,8 @@ const authenticate = async user => {
 
 const get = id => usersRepo.get(id);
 
+const getUserByEmail = email => usersRepo.getUserByEmail(email);
+
 const save = user => usersRepo.save(user);
 
 const update = (id, user) => usersRepo.update(id, user);
@@ -31,4 +33,4 @@ const remove = async id => {
   await usersRepo.remove(id);
 };
 
-module.exports = { authenticate, get, save, update, remove };
+module.exports = { authenticate, get, save, update, remove, getUserByEmail };

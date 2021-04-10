@@ -22,7 +22,7 @@ const User = new Schema(
 );
 
 User.pre('save', async function preSave(next) {
-  this.password = await bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, this.password.length);
   next();
 });
 
@@ -30,7 +30,7 @@ User.pre('findOneAndUpdate', async function preUpdate(next) {
   if (this._update.$set.password) {
     this._update.$set.password = await bcrypt.hash(
       this._update.$set.password,
-      10
+      this.password.length
     );
   }
 
