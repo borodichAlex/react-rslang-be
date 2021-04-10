@@ -3,8 +3,9 @@ const { OK } = require('http-status-codes');
 const User = require('../users/user.model');
 const userService = require('../users/user.service');
 
-router.post('/', async (req, res) => {
+router.route('/').post(async (req, res) => {
   try {
+    console.log('body', req.body);
     const { name, email, password } = req.body;
     const candidate = await userService.getUserByEmail({ email });
     if (candidate) {
