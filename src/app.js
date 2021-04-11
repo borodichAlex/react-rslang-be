@@ -8,6 +8,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 require('express-async-errors');
+const multer = require('multer');
 const { NOT_FOUND } = require('http-status-codes');
 
 const winston = require('./common/logging');
@@ -26,6 +27,8 @@ const { userIdValidator } = require('./utils/validation/validator');
 
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
+
+const loader = multer({ dest: path.join(__dirname, 'users/avatars') });
 
 app.use(helmet());
 app.use(cors());
@@ -55,6 +58,8 @@ app.use(
 );
 
 app.use('/words', wordRouter);
+
+app.use(loader.single('avatar'));
 
 app.use('/signup', signupRouter);
 
