@@ -8,10 +8,12 @@ const defaultPhoto =
 
 router.route('/').post(async (req, res) => {
   try {
-    const { name, email, password, file } = req.body;
+    const { name, email, password, avatar } = req.body;
     let photo = {};
-    if (req.file) {
-      photo = await cloudinary.uploader.upload(file.path);
+    console.log({ req });
+    if (avatar) {
+      console.log({ avatar });
+      photo = await cloudinary.uploader.upload(avatar.path);
     }
     await userService.save({
       name,
@@ -22,7 +24,7 @@ router.route('/').post(async (req, res) => {
     res.status(OK).json({ message: 'User was created' });
   } catch (e) {
     console.error(e);
-    res.send({ message: 'Server error' });
+    res.send({ message: 'Server error', req });
   }
 });
 
