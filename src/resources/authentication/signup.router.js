@@ -8,12 +8,10 @@ const defaultPhoto =
 
 router.route('/').post(async (req, res) => {
   try {
-    const { name, email, password, avatar } = req.body;
+    const { name, email, password } = req.body;
     let photo = {};
-    console.log({ req });
-    if (avatar) {
-      console.log({ avatar });
-      photo = await cloudinary.uploader.upload(avatar.path);
+    if (req.file) {
+      photo = await cloudinary.uploader.upload(req.file.path);
     }
     await userService.save({
       name,
