@@ -64,7 +64,7 @@ app.use(
 
 app.use('/words', wordRouter);
 
-app.use(loader.single('avatar'));
+app.use(loader.single('file'));
 
 app.use('/signup', signupRouter);
 
