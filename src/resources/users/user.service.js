@@ -16,10 +16,17 @@ const authenticate = async user => {
 
   const tokens = await tokenService.getTokens(userEntity._id);
 
-  return { ...tokens, userId: userEntity._id, name: userEntity.name };
+  return {
+    ...tokens,
+    userId: userEntity._id,
+    name: userEntity.name,
+    avatar: userEntity.avatar
+  };
 };
 
 const get = id => usersRepo.get(id);
+
+const getUserByEmail = email => usersRepo.getUserByEmail(email);
 
 const save = user => usersRepo.save(user);
 
@@ -31,4 +38,4 @@ const remove = async id => {
   await usersRepo.remove(id);
 };
 
-module.exports = { authenticate, get, save, update, remove };
+module.exports = { authenticate, get, save, update, remove, getUserByEmail };

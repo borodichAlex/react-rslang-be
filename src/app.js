@@ -8,10 +8,12 @@ const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 require('express-async-errors');
+const multer = require('multer');
 const { NOT_FOUND } = require('http-status-codes');
 
 const winston = require('./common/logging');
 const wordRouter = require('./resources/words/word.router');
+const signupRouter = require('./resources/authentication/signup.router');
 const signinRouter = require('./resources/authentication/signin.router');
 const userRouter = require('./resources/users/user.router');
 const userTokenRouter = require('./resources/token/token.router');
@@ -26,8 +28,15 @@ const { userIdValidator } = require('./utils/validation/validator');
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
 
+const loader = multer({ dest: path.join(__dirname, 'users/avatars') });
+
+const corsOptionsLocal = {
+  origin: 'http://localhost:3000',
+  credentials: true
+};
+
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptionsLocal));
 app.use(express.json());
 
 app.use('/files', express.static(path.join(__dirname, '../files')));
@@ -54,6 +63,10 @@ app.use(
 );
 
 app.use('/words', wordRouter);
+
+app.use(loader.single('file'));
+
+app.use('/signup', signupRouter);
 
 app.use('/signin', signinRouter);
 
