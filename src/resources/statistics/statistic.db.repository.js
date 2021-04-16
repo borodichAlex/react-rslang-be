@@ -2,7 +2,7 @@ const Statistics = require('./statistic.model');
 const { NOT_FOUND_ERROR } = require('../../errors/appErrors');
 
 const get = async userId => {
-  const statistic = await Statistics.findOne({ userId });
+  const statistic = await Statistics.find({ userId });
   if (!statistic) {
     throw new NOT_FOUND_ERROR('statistic', `userId: ${userId}`);
   }
@@ -10,13 +10,39 @@ const get = async userId => {
   return statistic;
 };
 
-const upsert = async (userId, statistic) =>
+const create = async (userId, statistic) => {
+  const exists = await Statistics.exists({
+    userId,
+    data: statistic.data,
+    gameName: statistic.gameName
+  });
+  if (exists) {
+    const oldData = await Statistics.findOne({
+      userId,
+      data: statistic.data,
+      gameName: statistic.gameName
+    });
+    const newData = {
+      learnedWords: oldData.learnedWords + statistic.learnedWords,
+      correctAnswers: Math.round(
+        (oldData.correctAnswers + statistic.correctAnswers) / 2
+      ),
+      streak:
+        oldData.streak > statistic.streak ? oldData.streak : statistic.streak
+    };
+    return Statistics.findOneAndUpdate(
+      { userId, data: statistic.data, gameName: statistic.gameName },
+      { $set: newData }
+    );
+  }
+  return Statistics.create({ userId, ...statistic });
+};
+
+const update = async (userId, statistic) =>
   Statistics.findOneAndUpdate(
-    { userId },
+    { userId, date: statistic.date },
     { $set: statistic },
     { upsert: true, new: true }
   );
 
-const remove = async userId => Statistics.deleteOne({ userId });
-
-module.exports = { get, upsert, remove };
+module.exports = { get, create, update };

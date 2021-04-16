@@ -11,9 +11,17 @@ const StatisticSchema = new Schema(
     learnedWords: {
       type: Number
     },
-    optional: {
-      type: Object,
-      required: false
+    date: {
+      type: String
+    },
+    streak: {
+      type: Number
+    },
+    correctAnswers: {
+      type: Number
+    },
+    gameName: {
+      type: String
     }
   },
   { collection: 'statistic' }

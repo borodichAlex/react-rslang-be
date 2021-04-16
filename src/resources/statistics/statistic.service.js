@@ -2,9 +2,10 @@ const statisticRepo = require('./statistic.db.repository');
 
 const get = async userId => statisticRepo.get(userId);
 
-const upsert = async (userId, statistic) =>
-  statisticRepo.upsert(userId, { ...statistic, userId });
+const create = async (userId, statistic) =>
+  statisticRepo.create(userId, statistic);
 
-const remove = async userId => statisticRepo.remove(userId);
+const update = async (userId, statistic) =>
+  statisticRepo.update(userId, statistic);
 
-module.exports = { get, upsert, remove };
+module.exports = { get, create, update };

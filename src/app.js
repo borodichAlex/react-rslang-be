@@ -35,15 +35,14 @@ const whitelist = [
   'https://rslang-team-33-borodichalex.netlify.app'
 ];
 const corsOptions = {
-  origin(origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
+  origin(pathOrigin, callback) {
+    if (whitelist.indexOf(pathOrigin) !== -1) {
       return callback(null, true);
     }
     callback(null, false);
   },
   methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
   optionsSuccessStatus: 200,
-  credentials: true,
   allowedHeaders: [
     'Content-Type',
     'Authorization',

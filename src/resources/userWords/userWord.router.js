@@ -6,7 +6,9 @@ const { validator } = require('../../utils/validation/validator');
 const userWordService = require('./userWord.service');
 
 router.get('/', async (req, res) => {
-  const userWords = await userWordService.getAll(req.userId);
+  const userWords = await userWordService.getAll(req.userId, req.query.type);
+  console.log(req.params);
+  console.log(userWords);
   res.status(OK).send(userWords.map(w => w.toResponse()));
 });
 
@@ -18,12 +20,12 @@ router.get('/:wordId', validator(wordId, 'params'), async (req, res) => {
 router.post(
   '/:wordId',
   validator(wordId, 'params'),
-  validator(userWord, 'body'),
+  //   validator(userWord, 'body'),
   async (req, res) => {
     const word = await userWordService.save(
-      req.params.wordId,
       req.userId,
-      req.body
+      req.params.wordId,
+      req.body.type
     );
     res.status(OK).send(word.toResponse());
   }
@@ -34,17 +36,13 @@ router.put(
   validator(wordId, 'params'),
   validator(userWord, 'body'),
   async (req, res) => {
-    const word = await userWordService.update(
-      req.params.wordId,
-      req.userId,
-      req.body
-    );
+    const word = await userWordService.update(req.userId, req.body);
     res.status(OK).send(word.toResponse());
   }
 );
 
 router.delete('/:wordId', validator(wordId, 'params'), async (req, res) => {
-  await userWordService.remove(req.params.wordId, req.userId);
+  await userWordService.remove(req.userId, req.params.wordId, req.query.type);
   res.sendStatus(NO_CONTENT);
 });
 

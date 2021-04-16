@@ -6,11 +6,16 @@ const { validator } = require('../../utils/validation/validator');
 
 router.get('/', async (req, res) => {
   const statistic = await statisticService.get(req.userId);
+  res.status(OK).send(statistic);
+});
+
+router.post('/', async (req, res) => {
+  const statistic = await statisticService.create(req.userId, req.body);
   res.status(OK).send(statistic.toResponse());
 });
 
 router.put('/', validator(statistics, 'body'), async (req, res) => {
-  const statistic = await statisticService.upsert(req.userId, req.body);
+  const statistic = await statisticService.update(req.userId, req.body);
   res.status(OK).send(statistic.toResponse());
 });
 
