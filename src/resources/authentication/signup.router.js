@@ -17,7 +17,7 @@ router.route('/').post(async (req, res) => {
       name,
       email,
       password,
-      avatar: photo.url || defaultPhoto
+      avatar: photo.secure_url || defaultPhoto
     });
     res.status(OK).json({ message: 'User was created' });
   } catch (e) {
