@@ -30,13 +30,33 @@ const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
 
 const loader = multer({ dest: path.join(__dirname, 'users/avatars') });
 
-const corsOptionsLocal = {
-  origin: 'http://localhost:3000',
-  credentials: true
+const whitelist = [
+  'http://localhost:3000',
+  'https://rslang-team-33-borodichalex.netlify.app'
+];
+const corsOptions = {
+  origin(origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      return callback(null, true);
+    }
+    callback(null, false);
+  },
+  methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+  optionsSuccessStatus: 200,
+  credentials: true,
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'X-Requested-With',
+    'device-remember-token',
+    'Access-Control-Allow-Origin',
+    'Origin',
+    'Accept'
+  ]
 };
 
 app.use(helmet());
-app.use(cors(corsOptionsLocal));
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use('/files', express.static(path.join(__dirname, '../files')));
