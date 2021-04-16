@@ -39,7 +39,7 @@ const corsOptions = {
     if (whitelist.indexOf(origin) !== -1) {
       return callback(null, true);
     }
-    return callback(null, false);
+    callback(null, false);
   },
   methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
   optionsSuccessStatus: 200,
